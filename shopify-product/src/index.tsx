@@ -1,12 +1,13 @@
-import { connect, RenderModalCtx, OnBootCtx } from 'datocms-plugin-sdk';
-import { render } from './utils/render';
-import ConfigScreen from './entrypoints/ConfigScreen';
-import BrowseProductsModal from './components/BrowseProductsModal';
-import FieldExtension from './entrypoints/FieldExtension';
-import 'datocms-react-ui/styles.css';
-import { isValidConfig, normalizeConfig } from './types';
+import { connect, RenderModalCtx, OnBootCtx } from "datocms-plugin-sdk";
+import { render } from "./utils/render";
+import ConfigScreen from "./entrypoints/ConfigScreen";
+import BrowseProductsModal from "./components/Products/Modal";
+import BrowseCollectionsModal from "./components/Collections/Modal";
+import FieldExtension from "./entrypoints/FieldExtension";
+import "datocms-react-ui/styles.css";
+import { isValidConfig, normalizeConfig } from "./types";
 
-const FIELD_EXTENSION_ID = 'shopifyProduct';
+const FIELD_EXTENSION_ID = "shopifyManager";
 
 connect({
   async onBoot(ctx: OnBootCtx) {
@@ -31,22 +32,22 @@ connect({
 
           await ctx.updateFieldAppearance(field.id, [
             {
-              operation: 'updateEditor',
+              operation: "updateEditor",
               newFieldExtensionId: FIELD_EXTENSION_ID,
             },
           ]);
 
           return true;
-        }),
+        })
       )
     ).some((x) => x);
 
     await ctx.updatePluginParameters(
-      normalizeConfig(ctx.plugin.attributes.parameters),
+      normalizeConfig(ctx.plugin.attributes.parameters)
     );
 
     if (someUpgraded) {
-      ctx.notice('Plugin upgraded successfully!');
+      ctx.notice("Plugin upgraded successfully!");
     }
   },
   renderConfigScreen(ctx) {
@@ -56,23 +57,23 @@ connect({
     return [
       {
         id: FIELD_EXTENSION_ID,
-        name: 'Shopify Product',
-        type: 'editor',
-        fieldTypes: ['string'],
+        name: "Shopify Manager",
+        type: "editor",
+        fieldTypes: ["json"],
       },
     ];
   },
   overrideFieldExtensions(field, ctx) {
     const config = normalizeConfig(ctx.plugin.attributes.parameters);
 
-    if (field.attributes.field_type !== 'string') {
+    if (field.attributes.field_type !== "json") {
       return;
     }
 
     if (
       !config.autoApplyToFieldsWithApiKey ||
       !new RegExp(config.autoApplyToFieldsWithApiKey).test(
-        field.attributes.api_key,
+        field.attributes.api_key
       )
     ) {
       return;
@@ -87,8 +88,10 @@ connect({
   },
   renderModal(modalId: string, ctx: RenderModalCtx) {
     switch (modalId) {
-      case 'browseProducts':
+      case "browseProducts":
         return render(<BrowseProductsModal ctx={ctx} />);
+      case "browseCollections":
+        return render(<BrowseCollectionsModal ctx={ctx} />);
     }
   },
 });

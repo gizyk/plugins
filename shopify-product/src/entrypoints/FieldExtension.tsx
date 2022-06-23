@@ -1,29 +1,38 @@
-import { RenderFieldExtensionCtx } from 'datocms-plugin-sdk';
-import { Canvas } from 'datocms-react-ui';
-import Value from '../components/Value';
-import Empty from '../components/Empty';
-import { Product } from '../utils/ShopifyClient';
-import get from 'lodash-es/get';
+import { RenderFieldExtensionCtx } from "datocms-plugin-sdk";
+import { Canvas } from "datocms-react-ui";
+import ProductsValue from "../components/Products/Value";
+import CollectionsValue from "../components/Collections/Value";
+import Empty from "../components/Empty";
+import { Item } from "../utils/ShopifyClient";
+import get from "lodash-es/get";
 
 type PropTypes = {
   ctx: RenderFieldExtensionCtx;
 };
 
 export default function FieldExtension({ ctx }: PropTypes) {
-  const value = get(ctx.formValues, ctx.fieldPath) as string | null;
+  const value = get(ctx.formValues, ctx.fieldPath) as string;
+  const parsedValue = JSON.parse(value) as Item | null;
 
-  const handleSelect = (product: Product) => {
-    ctx.setFieldValue(ctx.fieldPath, product.handle);
+  const handleSelect = (item: Item) => {
+    ctx.setFieldValue(ctx.fieldPath, JSON.stringify(item));
   };
 
   const handleReset = () => {
-    ctx.setFieldValue(ctx.fieldPath, null);
+    ctx.setFieldValue(ctx.fieldPath, {});
   };
 
   return (
     <Canvas ctx={ctx}>
-      {value ? (
-        <Value value={value} onReset={handleReset} />
+      {parsedValue && parsedValue.handle ? (
+        <>
+          {parsedValue.type === "Product" && (
+            <ProductsValue value={parsedValue} onReset={handleReset} />
+          )}
+          {parsedValue.type === "Collection" && (
+            <CollectionsValue value={parsedValue} onReset={handleReset} />
+          )}
+        </>
       ) : (
         <Empty onSelect={handleSelect} />
       )}
