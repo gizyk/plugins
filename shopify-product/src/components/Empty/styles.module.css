@@ -8,3 +8,8 @@
   margin-bottom: 20px;
   color: var(--light-body-color);
 }
+
+.empty__buttons {
+  display: flex;
+  gap: 20px;
+}

@@ -61,7 +61,8 @@
     ]
   },
   "devDependencies": {
-    "cross-env": "^7.0.3"
+    "cross-env": "^7.0.3",
+    "graphql-tag": "^2.12.6"
   },
   "datoCmsPlugin": {
     "title": "Shopify product",
