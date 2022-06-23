@@ -1,8 +1,8 @@
 {
-  "name": "datocms-plugin-shopify-product",
+  "name": "datocms-plugin-shopify-manager",
   "homepage": "https://github.com/datocms/plugins/tree/master/shopify-product#readme",
-  "description": "A plugin that allows users to search and select Shopify products",
-  "author": "DatoCMS <support@datocms.com>",
+  "description": "A plugin that allows users to search and select Shopify products and collections",
+  "author": "gizyk9",
   "license": "ISC",
   "version": "0.1.4",
   "keywords": [
